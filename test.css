@@ -1,0 +1,32 @@
+.startScroll {
+    position: fixed;
+    top: 12px;
+    left: 150px;
+    font-size: 14px;
+    border: 1px solid blue;
+    padding: 5px 10px;
+    color: blue;
+    z-index: 1;
+    z-index: 1000;
+    background: white;
+    cursor: pointer;
+    transition: background .2 ease-in-out;
+}
+.startScroll:hover {
+    background: gray;
+}
+
+.startPlay {
+    position: fixed;
+    top: 12px;
+    left: 250px;
+    font-size: 14px;
+    border: 1px solid blue;
+    padding: 5px 10px;
+    color: blue;
+    z-index: 1;
+    z-index: 1000;
+    background: white;
+    cursor: pointer;
+    transition: background .2 ease-in-out;
+}
