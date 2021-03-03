@@ -1,6 +1,28 @@
-var mainCont = document.querySelector('#react-root');
+function waitForElm(selector) {
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
 
-initElements();
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                resolve(document.querySelector(selector));
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}
+waitForElm('nav').then(e => {
+    console.log('yeaabb')
+    initElements();
+});
+
+var mainCont = document.querySelector('#react-root');
 
 function initElements(){
     mainCont.className = 'inactive';
@@ -11,12 +33,33 @@ function initElements(){
     document.querySelector('body').appendChild(introCont);
 
     let recordBtn = document.createElement('div');
-    recordBtn.innerHTML = '<div class="startScroll">Record</div>';
+    recordBtn.innerHTML = '<div class="startScroll">Start Browsing</div>';
     introCont.appendChild(recordBtn);
     recordBtn.onclick = function(e){
         hideIntro();
         document.addEventListener('scroll', scrollListener, true);
     }
+    document.querySelector('.intro').className = 'intro';
+    mainCont.className = 'inactive';
+
+
+    // let navBlock = document.createElement('div');
+    // navBlock.className = 'navBlock';
+    // document.querySelector('nav').appendChild(navBlock);
+
+    let recInd = document.createElement('thing');
+    recInd.className = 'recInd';
+    recInd.innerHTML = 'Recording...'
+    document.querySelectorAll('nav')[0].appendChild(recInd);
+
+    let playBtn = document.createElement('div');
+    playBtn.className = "startPlay";
+    playBtn.innerHTML = '<div>End Session</div>';
+    playBtn.onclick = function(e){
+        scrollEmulation();
+    }
+    mainCont.appendChild(playBtn);
+
 }
 
 function showIntro(){
@@ -29,14 +72,17 @@ function hideIntro(){
 }
 
 
+var mainCont = document.querySelector('main');
+
 var scrollListener = function(e) {
+
 
     chrome.storage.local.get('scrollArray',  function(data) {
         var scrollObj;
         if (data.scrollArray.length > 0){
-            scrollObj = {"scrollPos": window.scrollY, "timestamp": Date.now(), "elapsedTime": Date.now() - data.scrollArray[0].timestamp};
+            scrollObj = {"scrollPos": mainCont.scrollTop, "timestamp": Date.now(), "elapsedTime": Date.now() - data.scrollArray[0].timestamp};
         } else {
-            scrollObj = {"scrollPos": window.scrollY, "timestamp": Date.now(), "elapsedTime": 0};
+            scrollObj = {"scrollPos": mainCont.scrollTop, "timestamp": Date.now(), "elapsedTime": 0};
         }
         data.scrollArray.push(scrollObj);
         chrome.storage.local.set({"scrollArray": data.scrollArray});
@@ -51,6 +97,8 @@ var scrollListener = function(e) {
 
 function scrollEmulation(){
     
+    document.querySelector('main').className = 'inactive';
+
     document.removeEventListener('scroll', scrollListener, true);
     chrome.storage.local.get('scrollArray',  localData => {
 
@@ -71,13 +119,7 @@ function scrollEmulation(){
     })
 }
 
-let playBtn = document.createElement('div');
-playBtn.className = "startPlay";
-playBtn.innerHTML = '<div>Play</div>';
-playBtn.onclick = function(e){
-    scrollEmulation();
-}
-mainCont.appendChild(playBtn);
+
 
 
 
