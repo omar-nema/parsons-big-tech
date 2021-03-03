@@ -1,10 +1,32 @@
-let recordBtn = document.createElement('div');
-recordBtn.className = "startScroll";
-recordBtn.innerHTML = '<div>Record</div>';
-recordBtn.onclick = function(e){
-    document.addEventListener('scroll', scrollListener, true);
+var mainCont = document.querySelector('#react-root');
+
+initElements();
+
+function initElements(){
+    mainCont.className = 'inactive';
+
+    let introCont = document.createElement('div');
+    introCont.className = 'intro';
+    introCont.innerHTML = '<div class="headerCustom">Disembodied Instagram</div><div class="subhead">Watch yourself browse Instagram.</div>';
+    document.querySelector('body').appendChild(introCont);
+
+    let recordBtn = document.createElement('div');
+    recordBtn.innerHTML = '<div class="startScroll">Record</div>';
+    introCont.appendChild(recordBtn);
+    recordBtn.onclick = function(e){
+        hideIntro();
+        document.addEventListener('scroll', scrollListener, true);
+    }
 }
-document.querySelector('nav').appendChild(recordBtn);
+
+function showIntro(){
+    document.querySelector('.intro').className = 'intro';
+    mainCont.className = 'inactive';
+}
+function hideIntro(){
+    document.querySelector('.intro').className = 'intro inactive';
+    mainCont.className = '';
+}
 
 
 var scrollListener = function(e) {
@@ -24,17 +46,6 @@ var scrollListener = function(e) {
     })
    
 };
-
-let playBtn = document.createElement('div');
-playBtn.className = "startPlay";
-playBtn.innerHTML = '<div>Play</div>';
-playBtn.onclick = function(e){
-    scrollEmulation();
-}
-document.querySelector('nav').appendChild(playBtn);
-
-
-
 
 
 
@@ -60,11 +71,35 @@ function scrollEmulation(){
     })
 }
 
+let playBtn = document.createElement('div');
+playBtn.className = "startPlay";
+playBtn.innerHTML = '<div>Play</div>';
+playBtn.onclick = function(e){
+    scrollEmulation();
+}
+mainCont.appendChild(playBtn);
+
+
+
+
+
+
+
 
 //start timer
 
 
 
+
+
+// let recordBtn = document.createElement('div');
+// recordBtn.className = "startScroll";
+// recordBtn.innerHTML = '<div>Record</div>';
+// recordBtn.onclick = function(e){
+//     document.addEventListener('scroll', scrollListener, true);
+// }
+
+// document.querySelector('body').appendChild(recordBtn);
 
 
 // document.addEventListener("DOMContentLoaded", function(){

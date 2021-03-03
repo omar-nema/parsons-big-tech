@@ -1,4 +1,63 @@
+.intro {
+    position: fixed;
+    width: 500px;
+    height: auto;
+    border: 1px dashed black;
+    top: 20px;
+    transform: translate(50%, 50%);
+    background: white;
+    box-shadow: 0 1px 1px 0 rgb(0 0 0 / 10%);
+    padding: 20px 50px;
+    width: 80%;
+    max-width: 500px;
+    transform: translate(-50%, -50%);
+    top: 30%;
+    left: 50%;
+    transition: opacity .2s linear;
+}
+.intro.inactive {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+.headerCustom {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 18px;
+    text-decoration: underline;
+}
+.subhead {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
 .startScroll {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    border: 1px solid #179ef7;
+    padding: 8px 0;
+    background: #fafafa;
+    color: #169df7;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s linear;
+}
+.startScroll:hover {
+    background: #eeebeb;
+}
+
+
+#react-root {
+    transition: opacity .3s ease-in-out;
+}
+#react-root.inactive {
+    opacity: .15;
+    pointer-events: none;
+}
+
+
+/* .startScroll {
     position: fixed;
     top: 12px;
     left: 150px;
@@ -6,27 +65,41 @@
     border: 1px solid blue;
     padding: 5px 10px;
     color: blue;
-    z-index: 1;
-    z-index: 1000;
+    z-index: 1000000;
     background: white;
     cursor: pointer;
     transition: background .2 ease-in-out;
 }
 .startScroll:hover {
     background: gray;
-}
+} */
+
+
+
 
 .startPlay {
     position: fixed;
-    top: 12px;
+    top: 50px;
     left: 250px;
     font-size: 14px;
     border: 1px solid blue;
     padding: 5px 10px;
     color: blue;
     z-index: 1;
-    z-index: 1000;
+    z-index: 10000000;
     background: white;
     cursor: pointer;
     transition: background .2 ease-in-out;
 }
+
+/* article {
+    background: blue !important;
+} */
+
+/* article * {
+    opacity: .6 !important;
+} */
+
+/* nav * {
+    opacity: 0 !important; 
+} */
