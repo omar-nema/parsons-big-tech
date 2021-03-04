@@ -1,3 +1,8 @@
+var mainCont = document.querySelector('#react-root');
+var mainShell = document.querySelector('main');
+var pageState = 'intro';
+var emulationStop = false; 
+
 function waitForElm(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
@@ -17,121 +22,149 @@ function waitForElm(selector) {
         });
     });
 }
+
+//initialize elements
 waitForElm('nav').then(e => {
-    console.log('yeaabb')
-    initElements();
+    mainCont.className = 'inactive';
+    initIntroModal();
+    initHeaderActions();
+    chrome.storage.sync.get(['pageVisited'], function(p){
+        if (p.pageVisited ){
+            pageState = 'watching';
+            document.addEventListener('scroll', scrollListener, true);
+        }
+        adjustUI();
+    });
+    
 });
 
-var mainCont = document.querySelector('#react-root');
-
-function createIntroModal(){
+function initIntroModal(){
     //intro modal
     let introCont = document.createElement('div');
-    introCont.className = 'intro';
+    introCont.className = 'intro inactive';
     introCont.innerHTML = '<div class="headerCustom">Disembodied Instagram Extension</div><div class="subhead">Watch yourself browse Instagram.</div>';
     document.querySelector('body').appendChild(introCont);
-    showIntro();
-
+  
     let recordBtn = document.createElement('div');
     recordBtn.innerHTML = '<div class="startScroll">Start Browsing</div>';
     introCont.appendChild(recordBtn);
     recordBtn.onclick = function(e){
-        hideIntro();
+        pageState = 'watching';
+        adjustUI();
         chrome.storage.local.set({"scrollArray": []});
         document.addEventListener('scroll', scrollListener, true);
     }
     document.querySelector('.intro').className = 'intro';
 }
 
-function createHeaderActions(){
-    let recInd = document.createElement('thing');
-    recInd.className = 'recInd';
-    recInd.innerHTML = 'Recording...'
-    document.querySelectorAll('nav')[0].appendChild(recInd);
+function initHeaderActions(){
+
+    // let recInd = document.createElement('thing');
+    // recInd.className = 'recInd';
+    // recInd.innerHTML = 'Recording...'
+    // document.querySelectorAll('nav')[0].appendChild(recInd);
+
+    let headerCont = document.createElement('div');
+    headerCont.className = "headerCont";
+    mainCont.appendChild(headerCont);
 
     let headerDec = document.createElement('div');
-    headerDec.className = "headerDec headerFloat";
+    headerDec.className = "headerDec";
     headerDec.innerHTML = '<div>Disembodied Browsing</div>';
-    mainCont.appendChild(headerDec);
+    //mainCont.appendChild(headerDec);
+    headerCont.appendChild(headerDec);
 
-    let btnStop = document.createElement('div');
-    btnStop.className = "btnStop headerFloat hidden";
-    btnStop.innerHTML = '<div>Stop Watching</div>';
-    mainCont.appendChild(btnStop);
-
+    let headerHolder = document.createElement('div');
+    headerHolder.className = "headerHolder";
+    headerCont.appendChild(headerHolder);
+ 
     let btnReplay = document.createElement('div');
     btnReplay.className = "btnReplay headerFloat hidden";
     btnReplay.innerHTML = '<div>Replay</div>';
-    mainCont.appendChild(btnReplay);
+    btnReplay.onclick = function(e){
+        emulationStop = true;
+        chrome.storage.sync.set({pageVisited: true});
+        scrollEmulation();
+    }
+    headerHolder.appendChild(btnReplay);
 
     let btnNewSesh = document.createElement('div');
-    btnNewSesh.className = "btnNewSesh headerFloat hidden";
+    btnNewSesh.className = "btnNew headerFloat hidden";
     btnNewSesh.innerHTML = '<div>New Session</div>';
-    mainCont.appendChild(btnNewSesh);
+    btnNewSesh.onclick = function(e){
+        chrome.storage.local.set({"scrollArray": []});
+        location.reload();
+    }
+    headerHolder.appendChild(btnNewSesh);
 
     let playBtn = document.createElement('div');
     playBtn.className = "startPlay headerFloat";
     playBtn.innerHTML = '<div>Done Browsing</div>';
     playBtn.onclick = function(e){
-        document.querySelectorAll('nav').forEach(d=> {d.classList.add('collapse')});
-        // document.querySelector('.helpBtn').classList.add('hide');
-        // document.querySelector('.startPlay').classList.add('hide');
+        pageState = 'playing';
+        adjustUI();
         scrollEmulation();
     }
-    mainCont.appendChild(playBtn);
-}
+    headerHolder.appendChild(playBtn);
 
-function createHeaderHelper(){
+
+
+    let playFeedback = document.createElement('div');
+    playFeedback.className = "playFeedback";
+    playFeedback.innerHTML = '<div>Playing back your browsing session</div>';
+    mainCont.appendChild(playFeedback);
+
     let helpBtn = document.createElement('div');
     helpBtn.className = "helpBtn headerFloat";
     helpBtn.innerHTML = '<div>?</div>';
-    helpBtn.onclick = function(e){
-        if (this.classList.contains('active')){
-            this.className = 'helpBtn'
-            document.querySelector('.helpTip').className = 'helpTip'
-        } else {
-            this.className = 'helpBtn active'
-            document.querySelector('.helpTip').className = 'helpTip show'
-            setTimeout(function(){
-                document.querySelector('.helpTip').className = 'helpTip';
-                helpBtn.className = 'helpBtn'       
-            }, 5000)
-        }
-    }
-    mainCont.appendChild(helpBtn);
+    headerCont.appendChild(helpBtn);
 
     let helpTip = document.createElement('div');
     helpTip.className = "helpTip";
-    helpTip.innerHTML = "<div>Your scrolling activity is currently being watched. After clicking the 'Done Browsing' button in the header, your scrolling activity will be played back to you.</div>";
+
     mainCont.appendChild(helpTip);
+
+    helpBtn.onclick = function(e){
+        if (this.classList.contains('active')){
+            this.classList.remove('active');
+            helpTip.className = 'helpTip'
+        } else {
+            this.classList.add('active');
+            helpTip.className = 'helpTip show'
+            if (pageState =='watching'){
+                helpTip.innerHTML = "<div>Your scrolling activity is currently being watched. After clicking the 'Done Browsing' button in the header, your scrolling activity will be played back to you.</div>";
+            } else {
+                helpTip.innerHTML = "<div>Watch your browsing session. Click 'replay' to play session from the start. 'New session' will refresh your browser and allow you to record a new session.</div>";
+            }
+            setTimeout(function(){
+                helpTip.className = 'helpTip';
+                helpBtn.classList.remove('active');     
+            }, 5000)
+        }
+    }
+
 }
 
-function initElements(){
-    mainCont.className = 'inactive';
 
-    createIntroModal();
-    createHeaderActions();
-    createHeaderHelper();
- 
 
+async function adjustUI(){
+  
+    if (pageState == 'intro'){
+        document.querySelector('.intro').className = 'intro';
+        mainCont.classList.remove('inactive');
+        mainCont.classList.add('inactive');
+    } else if (pageState =='watching'){
+        document.querySelector('.intro').className = 'intro inactive';
+        mainCont.classList.remove('inactive');
+        document.querySelector('.startPlay').classList.remove('hidden');
+    } else if (pageState == 'playing'){
+        document.querySelector('.startPlay').classList.add('hidden');
+        document.querySelector('.btnReplay').classList.remove('hidden');
+        document.querySelector('.btnNew').classList.remove('hidden');
+    }
 }
-
-function showIntro(){
-    document.querySelector('.intro').className = 'intro';
-    mainCont.classList.remove('inactive');
-    mainCont.classList.add('inactive');
-}
-function hideIntro(){
-    document.querySelector('.intro').className = 'intro inactive';
-    mainCont.classList.remove('inactive');
-}
-
-
-var mainShell = document.querySelector('main');
 
 var scrollListener = function(e) {
-
-
     chrome.storage.local.get('scrollArray',  function(data) {
         var scrollObj;
         if (data.scrollArray.length > 0){
@@ -141,71 +174,26 @@ var scrollListener = function(e) {
         }
         data.scrollArray.push(scrollObj);
         chrome.storage.local.set({"scrollArray": data.scrollArray});
-
-        //console.log(data.scrollArray)
-
+        console.log(data.scrollArray)
     })
-   
 };
-
-
 
 function scrollEmulation(){
     
-    document.querySelector('main').classList.add('inactive');
-
+    mainShell.classList.add('inactive');
     document.removeEventListener('scroll', scrollListener, true);
     chrome.storage.local.get('scrollArray',  localData => {
-
-        console.log('running emulation');
 
         //requires promises
         window.scrollTo(0, localData.scrollArray[0].scrollPos);
   
         localData.scrollArray.forEach( async (s, i) => {
-            await setTimeout(function(){
-                // window.scrollTo(0, s.scrollPos)
 
-                //mainCont.scrollTop = s.scrollPos;
+            await window.setTimeout(function(){
+                window.scrollTo({top: s.scrollPos,behavior: 'smooth',})
+            }, s.elapsedTime);
+            mainShell.classList.remove('inactive');
 
-                window.scrollTo({
-                    top: s.scrollPos,
-                    behavior: 'smooth',
-                })
-            }, s.elapsedTime)
         });  
     })
 }
-
-
-
-
-
-
-
-
-
-
-//start timer
-
-
-
-
-
-// let recordBtn = document.createElement('div');
-// recordBtn.className = "startScroll";
-// recordBtn.innerHTML = '<div>Record</div>';
-// recordBtn.onclick = function(e){
-//     document.addEventListener('scroll', scrollListener, true);
-// }
-
-// document.querySelector('body').appendChild(recordBtn);
-
-
-// document.addEventListener("DOMContentLoaded", function(){
-//     console.log('hi');
- 
-// });
-
-
-//name.appendChild(document.createElement('div'))

@@ -1,6 +1,7 @@
 chrome.runtime.onInstalled.addListener(function(){
 
     chrome.storage.local.set({scrollArray: []});
+    chrome.storage.sync.set({pageVisted: false});
 
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
         chrome.declarativeContent.onPageChanged.addRules([{
