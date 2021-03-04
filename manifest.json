@@ -1,7 +1,7 @@
 {
     "name": "Disembodied Browsing",
     "version": "1.0",
-    "description": "Watch yourself browse the internet",
+    "description": "Watch yourself browse Instagram.",
     "permissions": ["activeTab", "declarativeContent","storage"],
     "background": {
         "scripts": ["background.js"],
@@ -10,14 +10,16 @@
     "content_scripts": [
         {
           "matches": ["https://www.instagram.com/"],
-           "css": ["test.css"],
-          "js": ["test.js"]
+           "css": ["watcherStyles.css"],
+          "js": ["watcher.js"]
         }
       ],
+
       "icons": {
         "16": "icon_16px.png",
         "48": "icon_48px.png",
        "128": "icon_128px.png"
      },
+    
     "manifest_version": 2            
 }

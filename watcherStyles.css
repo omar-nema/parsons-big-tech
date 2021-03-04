@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+.intro {
+    position: fixed;
+    width: 500px;
+    height: auto;
+    top: 20px;
+    transform: translate(50%, 50%);
+    background: white;
+    box-shadow: 0 1px 1px 0 rgb(0 0 0 / 10%);
+    width: 80%;
+    transform: translate(-50%, -50%);    
+    top: 30%;
+    left: 50%;
+    transition: opacity .2s linear;
+    padding: 40px 60px;
+    border: 1px solid rgba(0,0,0,.1);
+    max-width: 600px;
+    font-family: 'IBM Plex Mono';
+    background: #fffdfd;
+    box-shadow: none;
+    border: 1px solid #8d8d8d;
+}
+.intro.inactive {
+    opacity: 0;
+    pointer-events: none;
+}
+nav div[role="button"]{
+    opacity: 0 !important;  
+}
+nav a {
+    opacity: 0 !important;
+}
+nav input {
+    opacity: 0 !important;
+}
+nav span {
+    opacity: 0 !important;
+}
+.headerCustom {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+.subhead {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+.startScroll {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    background: #fafafa;
+    background: #169df7;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s linear;
+
+    border: 2px solid rgb(16 126 200);
+    padding: 10px 0;
+  
+}
+.startScroll:hover {
+    background: #127dc4;
+}
+.recInd {
+    position: absolute;
+    z-index: 100000000;
+    top: 50%;
+    left: 45%;
+    font-size: 16px;
+    color: lightgray;
+    transform: translate(0, -50%);
+}
+
+main.inactive div[role="presentation"]{
+    opacity: 0.1 !important;  
+}
+
+main.inactive article[role="presentation"]{
+    opacity: 0.1 !important;  
+    border: 1px solid black;
+}
+
+
+#react-root {
+    transition: opacity .3s ease-in-out;
+}
+#react-root.inactive {
+    opacity: .15;
+    pointer-events: none;
+}
+.headerCont {
+    z-index: 10000;
+    font-size: 16px;
+    font-family: 'IBM Plex Mono';
+    background: #fafafa;
+    font-weight: 600;
+    border: 1px solid rgba(0,0,0,.2);
+   top: 0px;
+    position: fixed;
+    padding: 8px 20px;
+    display: block;
+    width: 100%;
+    height: 55px;
+    /* align-items: center;; */
+    /* justify-content: space-between; */
+}
+.headerCont .headerHolder,.headerCont .headerDec  {
+    display: inline-flex;
+}
+.headerDec {
+    border: none;
+    background: none;
+    color: gray;
+    /* left: 15%; */
+    padding: 8px 12px;
+    cursor: inherit;
+    width: 25%;
+}
+.headerHolder {
+    width: 50%;
+    flex-direction: row;
+    justify-content: center;
+}
+.headerFloat.helpBtn {
+    border-radius: 100%;
+    display: inline-flex;
+    align-items: right;
+    width: 4px;
+    display: inline-flex;
+    padding: 5px 15px;
+    align-items: center;
+    margin-left: 15%;    
+}
+.helpBtn.active {
+    border-color: #0095f6;
+}
+
+.headerFloat {
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'IBM Plex Mono';
+    color: #0095f6;
+    background: #fafafa;
+    font-weight: 600;
+    border: 1px solid rgba(0,0,0,.2);
+    transition: all .15s linear;;
+    padding: 8px 20px;
+    text-align: center;
+    max-width: 200px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.headerFloat:hover{
+    background: #eeeded;
+}
+.headerFloat.headerDec:hover {
+    background: none;
+}
+.headerFloat.hidden {
+    display: none;
+}
+.headerFloat.disabled {
+    opacity: 0.3 !important;
+    pointer-events: none;
+}
+
+.startPlay {
+    text-align: center;
+    margin: auto;
+}
+.startPlay.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.btnReplay {
+    width: auto;
+    width: 130px;
+}
+.btnNew {
+    width: auto;
+    width: 160px;    
+}
+
+
+nav {
+    pointer-events: none;
+    transition: transform .3 ease-in-out;
+}
+
+main > section:nth-child(1)>div:nth-child(3){
+    display: none;
+}
+main > section > div:nth-child(1){
+    margin: auto !important;
+}
+
+.helpTip, .playFeedback {
+    font-size: 14px;
+    font-family: 'IBM Plex Mono';
+    position: fixed;
+    padding: 15px 20px;
+    box-shadow: 0 1px 5px 1px rgb(0 0 0 / 5%);
+    pointer-events: none;
+    transition: opacity .15s ease-in-out;
+    font-weight: 500;
+    background: rgba(255,255,255, 0.8);;
+    color: black;
+}
+.playFeedback.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.helpTip {
+    right: 65px;
+    z-index: 100000;
+    top: 58px;
+    max-width: 400px;
+    right: 50px;
+    border: 1px solid rgba(0,0,0,.1);
+    opacity: 0;
+}
+.helpTip.show {
+    opacity: 1;
+    background: white;
+}
+.playFeedback {
+    left: 50%;
+    transform: translate(-50%, 0);
+    top: 60px;
+    
+    
+}
