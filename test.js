@@ -24,55 +24,110 @@ waitForElm('nav').then(e => {
 
 var mainCont = document.querySelector('#react-root');
 
-function initElements(){
-    mainCont.className = 'inactive';
-
+function createIntroModal(){
+    //intro modal
     let introCont = document.createElement('div');
     introCont.className = 'intro';
-    introCont.innerHTML = '<div class="headerCustom">Disembodied Instagram</div><div class="subhead">Watch yourself browse Instagram.</div>';
+    introCont.innerHTML = '<div class="headerCustom">Disembodied Instagram Extension</div><div class="subhead">Watch yourself browse Instagram.</div>';
     document.querySelector('body').appendChild(introCont);
+    showIntro();
 
     let recordBtn = document.createElement('div');
     recordBtn.innerHTML = '<div class="startScroll">Start Browsing</div>';
     introCont.appendChild(recordBtn);
     recordBtn.onclick = function(e){
         hideIntro();
+        chrome.storage.local.set({"scrollArray": []});
         document.addEventListener('scroll', scrollListener, true);
     }
     document.querySelector('.intro').className = 'intro';
-    mainCont.className = 'inactive';
+}
 
-
-    // let navBlock = document.createElement('div');
-    // navBlock.className = 'navBlock';
-    // document.querySelector('nav').appendChild(navBlock);
-
+function createHeaderActions(){
     let recInd = document.createElement('thing');
     recInd.className = 'recInd';
     recInd.innerHTML = 'Recording...'
     document.querySelectorAll('nav')[0].appendChild(recInd);
 
+    let headerDec = document.createElement('div');
+    headerDec.className = "headerDec headerFloat";
+    headerDec.innerHTML = '<div>Disembodied Browsing</div>';
+    mainCont.appendChild(headerDec);
+
+    let btnStop = document.createElement('div');
+    btnStop.className = "btnStop headerFloat hidden";
+    btnStop.innerHTML = '<div>Stop Watching</div>';
+    mainCont.appendChild(btnStop);
+
+    let btnReplay = document.createElement('div');
+    btnReplay.className = "btnReplay headerFloat hidden";
+    btnReplay.innerHTML = '<div>Replay</div>';
+    mainCont.appendChild(btnReplay);
+
+    let btnNewSesh = document.createElement('div');
+    btnNewSesh.className = "btnNewSesh headerFloat hidden";
+    btnNewSesh.innerHTML = '<div>New Session</div>';
+    mainCont.appendChild(btnNewSesh);
+
     let playBtn = document.createElement('div');
-    playBtn.className = "startPlay";
-    playBtn.innerHTML = '<div>End Session</div>';
+    playBtn.className = "startPlay headerFloat";
+    playBtn.innerHTML = '<div>Done Browsing</div>';
     playBtn.onclick = function(e){
+        document.querySelectorAll('nav').forEach(d=> {d.classList.add('collapse')});
+        // document.querySelector('.helpBtn').classList.add('hide');
+        // document.querySelector('.startPlay').classList.add('hide');
         scrollEmulation();
     }
     mainCont.appendChild(playBtn);
+}
+
+function createHeaderHelper(){
+    let helpBtn = document.createElement('div');
+    helpBtn.className = "helpBtn headerFloat";
+    helpBtn.innerHTML = '<div>?</div>';
+    helpBtn.onclick = function(e){
+        if (this.classList.contains('active')){
+            this.className = 'helpBtn'
+            document.querySelector('.helpTip').className = 'helpTip'
+        } else {
+            this.className = 'helpBtn active'
+            document.querySelector('.helpTip').className = 'helpTip show'
+            setTimeout(function(){
+                document.querySelector('.helpTip').className = 'helpTip';
+                helpBtn.className = 'helpBtn'       
+            }, 5000)
+        }
+    }
+    mainCont.appendChild(helpBtn);
+
+    let helpTip = document.createElement('div');
+    helpTip.className = "helpTip";
+    helpTip.innerHTML = "<div>Your scrolling activity is currently being watched. After clicking the 'Done Browsing' button in the header, your scrolling activity will be played back to you.</div>";
+    mainCont.appendChild(helpTip);
+}
+
+function initElements(){
+    mainCont.className = 'inactive';
+
+    createIntroModal();
+    createHeaderActions();
+    createHeaderHelper();
+ 
 
 }
 
 function showIntro(){
     document.querySelector('.intro').className = 'intro';
-    mainCont.className = 'inactive';
+    mainCont.classList.remove('inactive');
+    mainCont.classList.add('inactive');
 }
 function hideIntro(){
     document.querySelector('.intro').className = 'intro inactive';
-    mainCont.className = '';
+    mainCont.classList.remove('inactive');
 }
 
 
-var mainCont = document.querySelector('main');
+var mainShell = document.querySelector('main');
 
 var scrollListener = function(e) {
 
@@ -80,14 +135,14 @@ var scrollListener = function(e) {
     chrome.storage.local.get('scrollArray',  function(data) {
         var scrollObj;
         if (data.scrollArray.length > 0){
-            scrollObj = {"scrollPos": mainCont.scrollTop, "timestamp": Date.now(), "elapsedTime": Date.now() - data.scrollArray[0].timestamp};
+            scrollObj = {"scrollPos": window.scrollY, "timestamp": Date.now(), "elapsedTime": Date.now() - data.scrollArray[0].timestamp};
         } else {
-            scrollObj = {"scrollPos": mainCont.scrollTop, "timestamp": Date.now(), "elapsedTime": 0};
+            scrollObj = {"scrollPos": window.scrollY, "timestamp": Date.now(), "elapsedTime": 0};
         }
         data.scrollArray.push(scrollObj);
         chrome.storage.local.set({"scrollArray": data.scrollArray});
 
-        console.log(data.scrollArray)
+        //console.log(data.scrollArray)
 
     })
    
@@ -97,7 +152,7 @@ var scrollListener = function(e) {
 
 function scrollEmulation(){
     
-    document.querySelector('main').className = 'inactive';
+    document.querySelector('main').classList.add('inactive');
 
     document.removeEventListener('scroll', scrollListener, true);
     chrome.storage.local.get('scrollArray',  localData => {
@@ -110,6 +165,9 @@ function scrollEmulation(){
         localData.scrollArray.forEach( async (s, i) => {
             await setTimeout(function(){
                 // window.scrollTo(0, s.scrollPos)
+
+                //mainCont.scrollTop = s.scrollPos;
+
                 window.scrollTo({
                     top: s.scrollPos,
                     behavior: 'smooth',

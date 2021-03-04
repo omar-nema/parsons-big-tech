@@ -1,35 +1,44 @@
-
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
 
 .intro {
     position: fixed;
     width: 500px;
     height: auto;
-    border: 1px solid #cac6c6;
+
     top: 20px;
     transform: translate(50%, 50%);
     background: white;
     box-shadow: 0 1px 1px 0 rgb(0 0 0 / 10%);
-    padding: 20px 50px;
     width: 80%;
-    max-width: 500px;
     transform: translate(-50%, -50%);    
     top: 30%;
     left: 50%;
     transition: opacity .2s linear;
+
+    padding: 40px 60px;
+    border: 1px solid rgba(0,0,0,.1);
+    max-width: 600px;
+   
+
+    font-family: 'IBM Plex Mono';
+    background: #fffdfd;
+    box-shadow: none;
+    border: 1px solid #8d8d8d;
 }
 .intro.inactive {
     opacity: 0;
     pointer-events: none;
 }
 
-body {
+/* html {
     overflow: hidden !important;
-}
+} */
 
-main {
-    overflow: auto;
-    max-height: calc(100vh - 55px);
-}
+/* html, body, main {
+    max-height: 90vh;
+} */
+
+
 
 
 /* .navBlock {
@@ -59,6 +68,7 @@ nav span {
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 18px;
+    font-weight: 600;
 }
 .subhead {
     font-size: 16px;
@@ -66,17 +76,26 @@ nav span {
 }
 .startScroll {
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
-    border: 1px solid #179ef7;
-    padding: 8px 0;
+
+
     background: #fafafa;
     background: #169df7;
     color: white;
     font-weight: 600;
     cursor: pointer;
     transition: background .15s linear;
+
+    border: 2px solid rgb(16 126 200);
+    padding: 10px 0;
+  
 }
+.startScroll:hover {
+    background: #127dc4;
+}
+
+
 .recInd {
     position: absolute;
     z-index: 100000000;
@@ -139,21 +158,116 @@ main.inactive article  a {
 } */
 
 
-.startPlay {
-    position: fixed;
-    padding: 5px 10px;
-    z-index: 10000000;
+.headerFloat {
+    z-index: 10000;
     cursor: pointer;
-    transition: background .2 ease-in-out;
-
-    background: #db0a0a;
-    color: white;
-    font-weight: 400;
-    right: 15%;
+    right: 20%;
     font-size: 16px;
-    top: 13px;
-    box-shadow: 0 1px 1px 0 rgb(0 0 0 / 10%);
+    font-family: 'IBM Plex Mono';
+    color: #0095f6;
+    background: #fafafa;
+    font-weight: 600;
+    border: 1px solid rgba(0,0,0,.2);
+    transition: background .1s linear, border .1s linear, opacity .15s ease-in-out;
+    top: 9px; 
+    position: fixed;
+    padding: 8px 20px;
+    transform: translate(-50%, 0);
+    width: fit-content;
+    text-align: center;
 }
+.headerFloat.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.headerFloat.disabled {
+    opacity: 0.3 !important;
+    pointer-events: none;
+}
+
+.headerDec:hover {
+    background: #f1efef
+}
+.startPlay {
+    left: 50%;
+    text-align: center;
+}
+.headerDec {
+    border: none;
+    background: none;
+    color: gray;
+    left: 15%;
+    padding: 8px 12px;
+    cursor: inherit;
+}
+.btnStop {
+    left: 40%;
+    width: 170px;
+}
+.btnReplay {
+    left: calc(40% + 170px);
+    width: 130px;
+}
+.btnNew {
+    left: calc(40% + 360px);
+}
+
+
+
+.helpBtn {
+    padding: 8px 12px;
+    right: 5%;
+    border-radius: 100%;
+}
+.helpBtn.active {
+    border-color: #0095f6;
+}
+nav {
+    pointer-events: none;
+    transition: transform .3 ease-in-out;
+}
+nav.collapse {
+    transform: translate(0,-80px);
+}
+main > section:nth-child(1)>div:nth-child(3){
+    display: none;
+}
+
+main > section > div:nth-child(1){
+    margin: auto !important;
+}
+
+
+.helpTip {
+    font-size: 18px;
+    font-family: 'IBM Plex Mono';
+    position: fixed;
+    transition: opacity .2s linear;
+    background: #fafafa;
+    color: black;
+    right: 65px;
+    z-index: 100000;
+    font-weight: 500;
+    top: 58px;
+    font-size: 14px;
+    max-width: 400px;
+    right: 50px;
+    padding: 10px 20px;
+    background: white;
+    border: 1px solid rgba(0,0,0,.1);
+    box-shadow: 0 1px 5px 1px rgb(0 0 0 / 5%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s ease-in-out;
+}
+.helpTip.show {
+    opacity: 1;
+}
+
+
+
+
+
 
 /* article {
     background: blue !important;
