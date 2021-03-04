@@ -59,11 +59,6 @@ function initIntroModal(){
 
 function initHeaderActions(){
 
-    // let recInd = document.createElement('thing');
-    // recInd.className = 'recInd';
-    // recInd.innerHTML = 'Recording...'
-    // document.querySelectorAll('nav')[0].appendChild(recInd);
-
     let headerCont = document.createElement('div');
     headerCont.className = "headerCont";
     mainCont.appendChild(headerCont);
@@ -71,7 +66,6 @@ function initHeaderActions(){
     let headerDec = document.createElement('div');
     headerDec.className = "headerDec";
     headerDec.innerHTML = '<div>Disembodied Browsing</div>';
-    //mainCont.appendChild(headerDec);
     headerCont.appendChild(headerDec);
 
     let headerHolder = document.createElement('div');
@@ -98,7 +92,7 @@ function initHeaderActions(){
     headerHolder.appendChild(btnNewSesh);
 
     let playBtn = document.createElement('div');
-    playBtn.className = "startPlay headerFloat";
+    playBtn.className = "startPlay disabled headerFloat";
     playBtn.innerHTML = '<div>Done Browsing</div>';
     playBtn.onclick = function(e){
         pageState = 'playing';
@@ -110,7 +104,7 @@ function initHeaderActions(){
 
 
     let playFeedback = document.createElement('div');
-    playFeedback.className = "playFeedback";
+    playFeedback.className = "playFeedback hidden";
     playFeedback.innerHTML = '<div>Playing back your browsing session</div>';
     mainCont.appendChild(playFeedback);
 
@@ -158,6 +152,9 @@ async function adjustUI(){
         mainCont.classList.remove('inactive');
         document.querySelector('.startPlay').classList.remove('hidden');
     } else if (pageState == 'playing'){
+        var playfeedback = document.querySelector('.playFeedback');
+        playfeedback.classList.remove('hidden');
+        setTimeout(function(){playfeedback.classList.add('hidden')}, 3000)
         document.querySelector('.startPlay').classList.add('hidden');
         document.querySelector('.btnReplay').classList.remove('hidden');
         document.querySelector('.btnNew').classList.remove('hidden');
@@ -168,13 +165,14 @@ var scrollListener = function(e) {
     chrome.storage.local.get('scrollArray',  function(data) {
         var scrollObj;
         if (data.scrollArray.length > 0){
+            document.querySelector('.startPlay').classList.remove('disabled');
             scrollObj = {"scrollPos": window.scrollY, "timestamp": Date.now(), "elapsedTime": Date.now() - data.scrollArray[0].timestamp};
         } else {
             scrollObj = {"scrollPos": window.scrollY, "timestamp": Date.now(), "elapsedTime": 0};
         }
         data.scrollArray.push(scrollObj);
         chrome.storage.local.set({"scrollArray": data.scrollArray});
-        console.log(data.scrollArray)
+        // console.log(data.scrollArray)
     })
 };
 
@@ -188,12 +186,16 @@ function scrollEmulation(){
         window.scrollTo(0, localData.scrollArray[0].scrollPos);
   
         localData.scrollArray.forEach( async (s, i) => {
-
+          
             await window.setTimeout(function(){
-                window.scrollTo({top: s.scrollPos,behavior: 'smooth',})
+                window.scrollTo({top: s.scrollPos,behavior: 'smooth'});
+                if (i == localData.scrollArray.length-1){
+                    mainShell.classList.remove('inactive');
+                };
             }, s.elapsedTime);
-            mainShell.classList.remove('inactive');
 
+         
+          
         });  
     })
 }

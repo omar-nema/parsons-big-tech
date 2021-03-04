@@ -83,6 +83,8 @@ main.inactive article[role="presentation"]{
     opacity: 0.1 !important;  
     border: 1px solid black;
 }
+
+
 #react-root {
     transition: opacity .3s ease-in-out;
 }
@@ -171,6 +173,10 @@ main.inactive article[role="presentation"]{
     text-align: center;
     margin: auto;
 }
+.startPlay.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
 
 .btnReplay {
     width: auto;
@@ -205,6 +211,10 @@ main > section > div:nth-child(1){
     font-weight: 400;
     background: rgba(255,255,255, 0.8);;
     color: black;
+}
+.playFeedback.hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .helpTip {
