@@ -7,7 +7,7 @@
         "scripts": ["background.js"],
         "persistent": false
     },
-    "browser_action": {
+    "page_action": {
       "default_icon": "icon_16px_enable.png",
       "default_title": "Click to enable and disable this extension. Works only on Instagram.com."
     },
