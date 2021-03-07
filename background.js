@@ -5,42 +5,29 @@ chrome.runtime.onInstalled.addListener(function(){
     chrome.storage.local.set({scrollArray: []});
     chrome.storage.sync.set({pageVisted: false});
 
-  //   chrome.browserAction.onClicked.addListener(function (tab) {
-  //     if (status == 'true'){
-  //       status = false;
-  //       chrome.browserAction.setIcon({path: "./icon_16px_disable.png"});
-  //     } 
-  //     else{
-  //       status = true;
-  //       chrome.browserAction.setIcon({path: "./icon_16px_enable.png"});
-  //     }
-  //     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  //       chrome.tabs.sendMessage(tabs[0].id, {status: status});
-  //     });
+    //clicking browser action button will change icon, and transmit msg to content script to add remove styles depending on whether enabled or disabled
+    chrome.browserAction.onClicked.addListener(function (tab) {
+      if (status == 'true'){
+        status = false;
+        chrome.browserAction.setIcon({path: "./icon_16px_disable.png"});
+      } 
+      else{
+        status = true;
+        chrome.browserAction.setIcon({path: "./icon_16px_enable.png"});
+      }
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {status: status});
+      });
+      
      
-  // });
+  });
 
-  // // check status on tab update and notify content script
-  // chrome.tabs.onActivated.addListener(function() {
-  //   if (status == 'true'){
-  //     chrome.browserAction.setIcon({path: "./icon_16px_enable.png"});
-  //     chrome.tabs.insertCSS(tab.id, {file: "content_style.css"});
-  //     chrome.tabs.executeScript(tab.id, {file: "content_script.js"});
-  //   } 
-  //   else{
-  //     chrome.browserAction.setIcon({path: "./icon_16px_disable.png"});
-  //   }
-  //   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-  //     chrome.tabs.sendMessage(tabs[0].id, {status: status});
-  //   });
-  // });
-
-  // //send extension status on request
-  // chrome.runtime.onMessage.addListener(
-  //   function(request, sender, sendResponse) {
-  //     if (request.status == "getStatus")
-  //       sendResponse({status: status});
-  // });
+  //send extension status on request
+  chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+      if (request.status == "getStatus")
+        sendResponse({status: status});
+  });
 
 
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {

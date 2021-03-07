@@ -3,6 +3,49 @@ var mainShell = document.querySelector('main');
 var pageState = 'intro';
 var emulationStop = false; 
 
+//watch for message if extension is enabled or disabled
+//depending on msg, enable or disable styles
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+    if (request.status == 'true'){
+        console.log('enabled')
+        insertStyles();
+    } else {
+        console.log('disabled')
+        removeStyles();
+    }
+  });
+
+  initScript();
+  var link = document.createElement("link");
+  insertStyles();
+
+  function insertStyles() {
+    // var head = document.head;
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    //link.href = 'watcherStyles.css';
+    link.href = chrome.extension.getURL("watcherStyles.css");
+    document.getElementsByTagName("head")[0].appendChild(link);
+    //head.appendChild(link);
+  }
+
+  function removeStyles(){
+    document.getElementsByTagName("head")[0].removeChild(link);
+  }
+
+  function initScript(){
+    waitForElm('nav').then(e => {
+        mainCont.className = 'inactive';
+        initIntroModal();
+        initHeaderActions();
+        chrome.storage.sync.get(['pageVisited'], function(p){
+            adjustUI();
+        }); 
+    });
+  }
+ 
+
 function waitForElm(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
@@ -22,21 +65,6 @@ function waitForElm(selector) {
         });
     });
 }
-
-//initialize elements
-waitForElm('nav').then(e => {
-    mainCont.className = 'inactive';
-    initIntroModal();
-    initHeaderActions();
-    chrome.storage.sync.get(['pageVisited'], function(p){
-        // if (p.pageVisited ){
-        //     pageState = 'watching';
-        //     document.addEventListener('scroll', scrollListener, true);
-        // }
-        adjustUI();
-    });
-    
-});
 
 function initIntroModal(){
     //intro modal
@@ -138,7 +166,6 @@ function initHeaderActions(){
     }
 
 }
-
 
 
 async function adjustUI(){
