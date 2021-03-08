@@ -2,7 +2,7 @@
     "name": "Disembodied Browsing",
     "version": "1.0",
     "description": "Watch yourself browse Instagram.",
-    "permissions": ["activeTab", "declarativeContent","storage"],
+    "permissions": ["declarativeContent","storage"],
     "background": {
         "scripts": ["background.js"],
         "persistent": false
