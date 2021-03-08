@@ -70,7 +70,7 @@ function initIntroModal(){
     //intro modal
     let introCont = document.createElement('div');
     introCont.className = 'intro inactive';
-    introCont.innerHTML = '<div class="headerCustom">Disembodied Instagram Extension</div><div class="subhead">Watch yourself browse Instagram.</div>';
+    introCont.innerHTML = '<div class="headerCustom">Instagram Mirror</div><div class="subhead">Watch yourself browse Instagram.</div>';
     document.querySelector('body').appendChild(introCont);
   
     let recordBtn = document.createElement('div');
@@ -93,7 +93,7 @@ function initHeaderActions(){
 
     let headerDec = document.createElement('div');
     headerDec.className = "headerDec";
-    headerDec.innerHTML = '<div>Disembodied Browsing</div>';
+    headerDec.innerHTML = '<div>Instagram Mirror</div>';
     headerCont.appendChild(headerDec);
 
     let headerHolder = document.createElement('div');
